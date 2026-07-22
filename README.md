@@ -1,3 +1,10 @@
+# Foundation Website v1.2
+
+Version 1.2 adds unique project photography across the site, an HTML/CSS Foundation Roadmap graphic, larger branded phase numbers, and explicit Resources page links for reliable local testing.
+
+## Upload to GitHub
+Upload the contents of this folder so `index.html` remains at the repository root. Cloudflare Pages should redeploy automatically after the commit.
+
 # Foundation Website Launch Package
 
 Updated homepage using the new Foundation logo system with navy, sand, sage, and warm neutral styling.
