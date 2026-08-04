@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ hub.seoTitle }}</title>
+  <meta name="description" content="{{ hub.metaDescription }}">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="{{ site.baseUrl }}/resources/">
+  <meta property="og:title" content="{{ hub.seoTitle }}">
+  <meta property="og:description" content="{{ hub.ogDescription }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ site.baseUrl }}/resources/">
+  <meta property="og:image" content="{{ site.baseUrl }}{{ featured.social_image.src }}">
+  <meta property="og:image:alt" content="{{ featured.social_image.alt }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{{ site.baseUrl }}{{ featured.social_image.src }}">
+  <meta name="twitter:image:alt" content="{{ featured.social_image.alt }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="generated-resource-hub">
+<a class="skip" href="#main">Skip to content</a>
+{% include "resources/partials/header.html" %}
+<main id="main">
+  <section class="page-hero resources-page-hero"><div class="container narrow"><p class="eyebrow">{{ hub.eyebrow }}</p><h1>{{ hub.heading }}</h1><p>{{ hub.introduction }}</p></div></section>
+  <section class="section resource-library" aria-labelledby="resource-library-title">
+    <div class="container">
+      <h2 id="resource-library-title" class="sr-only">Renovation resource library</h2>
+      <div class="resource-card-grid">
+        <article class="resource-card featured-card" data-kb-id="{{ featured.kb_id }}"><a class="resource-card-link" href="{{ featured.url }}"><img src="..{{ featured.hero.src }}" alt="{{ featured.hero.alt }}"><div class="resource-card-body"><p class="resource-category">{{ featured.category }}</p><h2>{{ featured.title }}</h2><p>{{ featured.summary }}</p><span class="text-link" aria-hidden="true">Read the guide →</span></div></a></article>
+        {% for article in articles %}<article class="resource-card" data-kb-id="{{ article.kb_id }}"><a class="resource-card-link" href="{{ article.url }}"><img src="..{{ article.hero.src }}" alt="{{ article.hero.alt }}"><div class="resource-card-body"><p class="resource-category">{{ article.category }}</p><h2>{{ article.title }}</h2><p>{{ article.summary }}</p><span class="text-link" aria-hidden="true">Read the guide →</span></div></a></article>{% endfor %}
+      </div>
+    </div>
+  </section>
+  <section class="cta-band"><div class="container cta-row"><div><p class="eyebrow light">Need Help With Your Project?</p><h2>Get independent guidance tailored to your renovation.</h2><p>Schedule a complimentary Discovery Call to discuss where you are and what decisions are ahead.</p></div><div class="contact-card"><a class="button sand" href="{{ site.bookingUrl }}" target="_blank" rel="noopener">Book Your Free Discovery Call</a><a href="tel:{{ site.phoneHref }}">{{ site.phoneDisplay }}</a><a href="mailto:{{ site.email }}">{{ site.email }}</a></div></div></section>
+</main>
+{% include "resources/partials/footer.html" %}
+<script src="../js/site.js"></script>
+</body>
+</html>

@@ -21,6 +21,8 @@
   <meta name="twitter:description" content="{{ article.og_description }}">
   <meta name="twitter:image" content="{{ site.baseUrl }}{{ article.social_image.src }}">
   <meta name="twitter:image:alt" content="{{ article.social_image.alt }}">
+  <script type="application/ld+json" data-schema="article">{{ article.article_schema_json | safe }}</script>
+  <script type="application/ld+json" data-schema="breadcrumb">{{ article.breadcrumb_schema_json | safe }}</script>
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
@@ -35,7 +37,7 @@
 <article>
   <header class="article-hero">
     <div class="container article-hero-grid">
-      <div><p class="eyebrow">{{ article.eyebrow }}</p><h1>{{ article.title }}</h1><p class="article-deck">{{ article.deck }}</p><p class="article-byline">{{ article.byline }}</p></div>
+      <div><p class="eyebrow">{{ article.eyebrow }}</p><h1>{{ article.title }}</h1><p class="article-deck">{{ article.deck }}</p><p class="article-byline">{{ article.byline }}</p>{% if article.publication_label %}<p class="article-dates"><time datetime="{{ article.publication_date }}">Published {{ article.publication_label }}</time>{% if article.updated_label %}<span aria-hidden="true"> · </span><time datetime="{{ article.updated_date }}">Updated {{ article.updated_label }}</time>{% endif %}</p>{% endif %}</div>
       <img src="..{{ article.hero.src }}" alt="{{ article.hero.alt }}">
     </div>
   </header>
@@ -46,6 +48,7 @@
     </div>
   </div>
 </article>
+{% include "resources/partials/related-articles.html" %}
 <section class="cta-band"><div class="container cta-row"><div><p class="eyebrow light">{{ article.cta.eyebrow }}</p><h2>{{ article.cta.title }}</h2><p>{{ article.cta.text }}</p></div><div class="contact-card"><a class="button sand" href="{{ site.bookingUrl }}" target="_blank" rel="noopener">{{ article.cta.button }}</a><a href="mailto:{{ site.email }}">{{ site.email }}</a></div></div></section>
 </main>
 {% include "resources/partials/footer.html" %}

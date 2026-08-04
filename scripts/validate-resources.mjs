@@ -1,19 +1,23 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { readArticles, root } from './lib/resources.mjs';
+import { isIsoDate } from './lib/generation.mjs';
 
 const required = [
   'schema_version', 'kb_id', 'title', 'slug', 'output_path', 'canonical_url',
   'seo_title', 'meta_description', 'og_title', 'og_description', 'category',
-  'summary', 'eyebrow', 'deck', 'byline', 'hero', 'status', 'toc', 'cta', 'source'
+  'summary', 'eyebrow', 'deck', 'byline', 'hero', 'social_image', 'featured',
+  'hub_order', 'status', 'related_ids', 'toc', 'cta', 'source'
 ];
 const allowedStatuses = new Set(['draft', 'published']);
 const seen = {
   ids: new Set(), outputs: new Set(), canonicals: new Set(),
+  slugs: new Set(), titles: new Set(), hubOrders: new Set(),
   heroImages: new Set(), socialImages: new Set(), allImages: new Set()
 };
 const errors = [];
 const articles = readArticles();
+const articlesById = new Map(articles.map((article) => [article.kb_id, article]));
 
 function readImageMetadata(filePath) {
   const buffer = fs.readFileSync(filePath);
@@ -94,11 +98,23 @@ for (const article of articles) {
   }
   if (!/^KB-\d{4}$/.test(article.kb_id || '')) errors.push(`${label}: invalid kb_id`);
   if (!allowedStatuses.has(article.status)) errors.push(`${label}: invalid status ${article.status}`);
+  if (!Object.hasOwn(article, 'publication_date') || !Object.hasOwn(article, 'updated_date')) {
+    errors.push(`${label}: publication_date and updated_date must be present; use null when unassigned`);
+  }
+  if (article.publication_date !== null && !isIsoDate(article.publication_date)) errors.push(`${label}: invalid publication_date`);
+  if (article.updated_date !== null && !isIsoDate(article.updated_date)) errors.push(`${label}: invalid updated_date`);
+  if (article.status === 'published' && !isIsoDate(article.publication_date)) errors.push(`${label}: published article requires publication_date`);
+  if (isIsoDate(article.publication_date) && isIsoDate(article.updated_date) && article.updated_date < article.publication_date) {
+    errors.push(`${label}: updated_date must be on or after publication_date`);
+  }
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(article.slug || '')) errors.push(`${label}: invalid slug`);
+  if (!Number.isInteger(article.hub_order) || article.hub_order < 1) errors.push(`${label}: invalid hub_order`);
   if (!article.output_path?.startsWith('resources/') || !article.output_path?.endsWith('.html')) {
     errors.push(`${label}: output_path must be a resources/*.html path`);
   }
   const expectedCanonical = `https://foundationsd.co/${article.output_path}`;
   if (article.canonical_url !== expectedCanonical) errors.push(`${label}: canonical does not match output_path`);
+  if (article.output_path !== `resources/${article.slug}.html`) errors.push(`${label}: output_path must agree with slug`);
   validateImage(article, 'hero', {
     format: 'webp', extension: '.webp', width: 1536, height: 1024,
     maxBytes: 500_000, seen: 'heroImages'
@@ -111,9 +127,28 @@ for (const article of articles) {
     });
   }
   if (article.source?.master_id !== article.kb_id) errors.push(`${label}: source.master_id must match kb_id`);
-  for (const [kind, value] of [['ids', article.kb_id], ['outputs', article.output_path], ['canonicals', article.canonical_url]]) {
+  for (const [kind, value] of [['ids', article.kb_id], ['outputs', article.output_path], ['canonicals', article.canonical_url], ['slugs', article.slug], ['titles', article.title], ['hubOrders', article.hub_order]]) {
     if (seen[kind].has(value)) errors.push(`${label}: duplicate ${kind.slice(0, -1)} ${value}`);
     seen[kind].add(value);
+  }
+  if (!Array.isArray(article.related_ids) || article.related_ids.length < 1 || article.related_ids.length > 3) {
+    errors.push(`${label}: related_ids must contain one to three KB IDs`);
+  } else {
+    const relatedIds = new Set();
+    const destinations = new Set();
+    for (const relatedId of article.related_ids) {
+      if (relatedId === article.kb_id) errors.push(`${label}: related_ids cannot contain self`);
+      if (relatedIds.has(relatedId)) errors.push(`${label}: duplicate related ID ${relatedId}`);
+      relatedIds.add(relatedId);
+      const related = articlesById.get(relatedId);
+      if (!related) {
+        errors.push(`${label}: unresolved related ID ${relatedId}`);
+      } else if (destinations.has(related.output_path)) {
+        errors.push(`${label}: duplicate related destination ${related.output_path}`);
+      } else {
+        destinations.add(related.output_path);
+      }
+    }
   }
   const ids = new Set();
   for (const item of article.toc || []) {
@@ -122,6 +157,15 @@ for (const article of articles) {
     ids.add(item.id);
     if (!article.body.includes(`id="${item.id}"`)) errors.push(`${label}: missing body anchor ${item.id}`);
   }
+}
+
+const orderedHubValues = [...seen.hubOrders].sort((a, b) => a - b);
+if (orderedHubValues.join(',') !== articles.map((_, index) => index + 1).join(',')) {
+  errors.push('Resource hub_order values must form a continuous sequence starting at 1');
+}
+const featured = articles.filter((article) => article.featured);
+if (featured.length !== 1 || featured[0]?.kb_id !== 'KB-1001' || featured[0]?.hub_order !== 1) {
+  errors.push('KB-1001 must be the sole featured resource with hub_order 1');
 }
 
 if (errors.length) {

@@ -7,6 +7,8 @@
     "preview:resources": "node scripts/build-resources.mjs --drafts --output .preview",
     "serve:resources": "node scripts/serve-preview.mjs",
     "validate:resources": "node scripts/validate-resources.mjs",
+    "validate:generated": "node scripts/validate-generated-resources.mjs",
+    "verify:resources": "node scripts/verify-resources-deterministic.mjs",
     "compare:kb-1001": "node scripts/compare-article.mjs resources/how-to-plan-home-renovation.html .preview/resources/how-to-plan-home-renovation.html"
   },
   "dependencies": {
