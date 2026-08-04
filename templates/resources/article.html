@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ article.seo_title }}</title>
+  <meta name="description" content="{{ article.meta_description }}">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="{{ article.canonical_url }}">
+  <meta property="og:title" content="{{ article.og_title }}">
+  <meta property="og:description" content="{{ article.og_description }}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="{{ article.canonical_url }}">
+  <meta property="og:image" content="{{ site.baseUrl }}{{ article.hero.src }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+{% include "resources/partials/header.html" %}
+<main id="main">
+<article>
+  <header class="article-hero">
+    <div class="container article-hero-grid">
+      <div><p class="eyebrow">{{ article.eyebrow }}</p><h1>{{ article.title }}</h1><p class="article-deck">{{ article.deck }}</p><p class="article-byline">{{ article.byline }}</p></div>
+      <img src="..{{ article.hero.src }}" alt="{{ article.hero.alt }}">
+    </div>
+  </header>
+  <div class="container article-layout">
+    <aside class="article-toc"><p class="toc-title">{{ article.toc_title }}</p>{% for item in article.toc %}<a href="#{{ item.id }}">{{ item.label }}</a>{% endfor %}</aside>
+    <div class="article-body">
+{{ body | safe }}
+    </div>
+  </div>
+</article>
+<section class="cta-band"><div class="container cta-row"><div><p class="eyebrow light">{{ article.cta.eyebrow }}</p><h2>{{ article.cta.title }}</h2><p>{{ article.cta.text }}</p></div><div class="contact-card"><a class="button sand" href="{{ site.bookingUrl }}" target="_blank" rel="noopener">{{ article.cta.button }}</a><a href="mailto:{{ site.email }}">{{ site.email }}</a></div></div></section>
+</main>
+{% include "resources/partials/footer.html" %}
+<script src="../js/site.js"></script>
+</body>
+</html>

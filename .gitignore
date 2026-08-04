@@ -1,0 +1,8 @@
+node_modules/
+.pnpm-store/
+.preview/
+*.docx
+*.doc
+~$*.docx
+master-articles/
+source-documents/

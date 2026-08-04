@@ -1,0 +1,17 @@
+{
+  "name": "foundation-website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:resources": "node scripts/build-resources.mjs",
+    "preview:resources": "node scripts/build-resources.mjs --drafts --output .preview",
+    "serve:resources": "node scripts/serve-preview.mjs",
+    "validate:resources": "node scripts/validate-resources.mjs",
+    "compare:kb-1001": "node scripts/compare-article.mjs resources/how-to-plan-home-renovation.html .preview/resources/how-to-plan-home-renovation.html"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "markdown-it": "^14.1.0",
+    "nunjucks": "^3.2.4"
+  }
+}
