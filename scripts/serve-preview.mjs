@@ -5,7 +5,7 @@ import { root } from './lib/resources.mjs';
 
 const previewRoot = path.join(root, '.preview');
 const port = Number(process.env.PORT || 4173);
-const contentTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg' };
+const contentTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp' };
 
 http.createServer((request, response) => {
   const urlPath = decodeURIComponent(new URL(request.url, `http://${request.headers.host}`).pathname);
