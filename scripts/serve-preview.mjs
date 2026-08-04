@@ -10,6 +10,7 @@ const contentTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; c
 http.createServer((request, response) => {
   const urlPath = decodeURIComponent(new URL(request.url, `http://${request.headers.host}`).pathname);
   let relative = urlPath === '/' ? 'resources/index.html' : urlPath.replace(/^\//, '');
+  if (urlPath !== '/' && urlPath.endsWith('/')) relative = path.join(relative, 'index.html');
   let filePath = path.resolve(previewRoot, relative);
   if (!filePath.startsWith(previewRoot + path.sep)) {
     response.writeHead(403).end('Forbidden');
