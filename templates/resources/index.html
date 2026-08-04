@@ -32,8 +32,8 @@
     <div class="container">
       <h2 id="resource-library-title" class="sr-only">Renovation resource library</h2>
       <div class="resource-card-grid">
-        <article class="resource-card featured-card" data-kb-id="{{ featured.kb_id }}"><a class="resource-card-link" href="{{ featured.url }}"><img src="..{{ featured.hero.src }}" alt="{{ featured.hero.alt }}"><div class="resource-card-body"><p class="resource-category">{{ featured.category }}</p><h2>{{ featured.title }}</h2><p>{{ featured.summary }}</p><span class="text-link" aria-hidden="true">Read the guide →</span></div></a></article>
-        {% for article in articles %}<article class="resource-card" data-kb-id="{{ article.kb_id }}"><a class="resource-card-link" href="{{ article.url }}"><img src="..{{ article.hero.src }}" alt="{{ article.hero.alt }}"><div class="resource-card-body"><p class="resource-category">{{ article.category }}</p><h2>{{ article.title }}</h2><p>{{ article.summary }}</p><span class="text-link" aria-hidden="true">Read the guide →</span></div></a></article>{% endfor %}
+        <article class="resource-card featured-card"><a class="resource-card-link" href="{{ featured.url }}"><img src="..{{ featured.hero.src }}" alt="{{ featured.hero.alt }}"><div class="resource-card-body"><p class="resource-category">{{ featured.category }}</p><h2>{{ featured.title }}</h2><p>{{ featured.summary }}</p><span class="text-link" aria-hidden="true">Read the guide →</span></div></a></article>
+        {% for article in articles %}<article class="resource-card"><a class="resource-card-link" href="{{ article.url }}"><img src="..{{ article.hero.src }}" alt="{{ article.hero.alt }}"><div class="resource-card-body"><p class="resource-category">{{ article.category }}</p><h2>{{ article.title }}</h2><p>{{ article.summary }}</p><span class="text-link" aria-hidden="true">Read the guide →</span></div></a></article>{% endfor %}
       </div>
     </div>
   </section>

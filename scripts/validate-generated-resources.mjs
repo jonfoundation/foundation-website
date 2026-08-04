@@ -27,13 +27,14 @@ if (!fs.existsSync(hubPath)) {
   errors.push('Draft Resources hub is missing');
 } else {
   const html = fs.readFileSync(hubPath, 'utf8');
-  const cardIds = [...html.matchAll(/data-kb-id="(KB-\d{4})"/g)].map((match) => match[1]);
-  const expectedIds = articles.map((article) => article.kb_id);
-  if (cardIds.join(',') !== expectedIds.join(',')) errors.push(`Hub card order mismatch: ${cardIds.join(',')}`);
-  if (cardIds[0] !== hubData.featuredKbId) errors.push('Hub featured article does not match configured KB ID');
+  const cardUrls = [...html.matchAll(/<a class="resource-card-link" href="([^"]+)"/g)].map((match) => match[1]);
+  const expectedUrls = articles.map((article) => article.url);
+  if (cardUrls.join(',') !== expectedUrls.join(',')) errors.push(`Hub card order mismatch: ${cardUrls.join(',')}`);
+  const featured = articles.find((article) => article.kb_id === hubData.featuredKbId);
+  if (cardUrls[0] !== featured?.url) errors.push('Hub featured article does not match configured KB ID');
   for (const article of articles) {
     for (const token of [
-      `data-kb-id="${article.kb_id}"`, `href="${article.url}"`,
+      `href="${article.url}"`,
       `src="..${article.hero.src}"`, `alt="${article.hero.alt}"`,
       article.title, article.summary, article.category
     ]) {
@@ -50,8 +51,9 @@ for (const article of articles) {
   const breadcrumbSchema = schemaFrom(html, 'breadcrumb', article.kb_id);
   if (articleSchema && !sameJson(articleSchema, article.article_schema)) errors.push(`${article.kb_id}: Article schema disagrees with metadata`);
   if (breadcrumbSchema && !sameJson(breadcrumbSchema, article.breadcrumb_schema)) errors.push(`${article.kb_id}: Breadcrumb schema disagrees with metadata`);
-  const relatedIds = [...html.matchAll(/data-related-kb-id="(KB-\d{4})"/g)].map((match) => match[1]);
-  if (relatedIds.join(',') !== article.related_ids.join(',')) errors.push(`${article.kb_id}: related article order or resolution mismatch`);
+  const relatedUrls = [...html.matchAll(/<article class="related-resource-card"><a href="([^"]+)"/g)].map((match) => match[1]);
+  const expectedRelatedUrls = article.related_articles.map((related) => related.url);
+  if (relatedUrls.join(',') !== expectedRelatedUrls.join(',')) errors.push(`${article.kb_id}: related article order or resolution mismatch`);
   for (const related of article.related_articles) {
     for (const token of [`href="${related.url}"`, `src="..${related.hero.src}"`, `alt="${related.hero.alt}"`]) {
       if (!html.includes(token)) errors.push(`${article.kb_id}: related ${related.kb_id} missing ${token}`);
@@ -71,8 +73,10 @@ const sitemapXml = fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
 const sitemapEntries = parseSitemap(sitemapXml);
 const sitemapUrls = sitemapEntries.map((entry) => entry.loc);
 if (new Set(sitemapUrls).size !== sitemapUrls.length) errors.push('Sitemap contains duplicate URLs');
-if (sitemapUrls.includes(`${site.baseUrl}/services/`)) errors.push('Services must not be added to the sitemap yet');
 const published = articles.filter((article) => article.status === 'published');
+const hasServicesEntry = sitemapUrls.includes(`${site.baseUrl}/services/`);
+if (published.length && !hasServicesEntry) errors.push('Published sitemap is missing the Services URL');
+if (!published.length && hasServicesEntry) errors.push('Draft-only sitemap must not include the unpublished Services URL');
 const candidateEntries = parseSitemap(renderSitemap(sitemapXml, articles, site));
 const retainedUrls = sitemapUrls.filter((url) => !url?.startsWith(`${site.baseUrl}/resources/`) || url === `${site.baseUrl}/resources/`);
 const candidateRetainedUrls = candidateEntries.map((entry) => entry.loc)
