@@ -112,8 +112,8 @@ for (const article of articles) {
   if (!article.output_path?.startsWith('resources/') || !article.output_path?.endsWith('.html')) {
     errors.push(`${label}: output_path must be a resources/*.html path`);
   }
-  const expectedCanonical = `https://foundationsd.co/${article.output_path}`;
-  if (article.canonical_url !== expectedCanonical) errors.push(`${label}: canonical does not match output_path`);
+  const expectedCanonical = `https://foundationsd.co/resources/${article.slug}`;
+  if (article.canonical_url !== expectedCanonical) errors.push(`${label}: canonical must use the extensionless public resource URL`);
   if (article.output_path !== `resources/${article.slug}.html`) errors.push(`${label}: output_path must agree with slug`);
   validateImage(article, 'hero', {
     format: 'webp', extension: '.webp', width: 1536, height: 1024,

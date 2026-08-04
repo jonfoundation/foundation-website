@@ -23,7 +23,7 @@ export function prepareArticles(articles, site) {
   const byId = new Map(ordered.map((article) => [article.kb_id, article]));
 
   return ordered.map((source) => {
-    const article = { ...source, url: `/${source.output_path}` };
+    const article = { ...source, url: new URL(source.canonical_url).pathname };
     article.related_articles = (source.related_ids || []).map((id) => {
       const related = byId.get(id);
       if (!related) return null;
@@ -33,7 +33,7 @@ export function prepareArticles(articles, site) {
         summary: related.summary,
         category: related.category,
         hero: related.hero,
-        url: `/${related.output_path}`
+        url: new URL(related.canonical_url).pathname
       };
     }).filter(Boolean);
     article.publication_label = source.publication_date ? formatDate(source.publication_date) : null;
