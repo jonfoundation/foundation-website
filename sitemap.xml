@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://foundationsd.co/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://foundationsd.co/resources/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://foundationsd.co/resources/how-to-plan-home-renovation.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://foundationsd.co/</loc><lastmod>2026-08-04</lastmod><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://foundationsd.co/services/</loc><lastmod>2026-08-04</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://foundationsd.co/resources/</loc><lastmod>2026-08-04</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://foundationsd.co/resources/how-to-plan-home-renovation.html</loc><lastmod>2026-08-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://foundationsd.co/resources/foundation-renovation-roadmap.html</loc><lastmod>2026-08-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://foundationsd.co/resources/how-much-does-a-home-renovation-cost.html</loc><lastmod>2026-08-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://foundationsd.co/resources/how-to-create-a-renovation-budget.html</loc><lastmod>2026-08-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://foundationsd.co/resources/who-to-hire-for-home-renovation.html</loc><lastmod>2026-08-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://foundationsd.co/resources/how-to-choose-a-renovation-contractor.html</loc><lastmod>2026-08-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://foundationsd.co/resources/how-to-compare-contractor-bids.html</loc><lastmod>2026-08-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://foundationsd.co/resources/how-to-plan-a-kitchen-renovation.html</loc><lastmod>2026-08-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://foundationsd.co/resources/how-to-plan-a-bathroom-renovation.html</loc><lastmod>2026-08-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://foundationsd.co/resources/how-to-plan-a-whole-home-renovation.html</loc><lastmod>2026-08-04</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
 </urlset>

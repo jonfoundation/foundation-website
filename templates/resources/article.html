@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ article.seo_title }}</title>
+  <meta name="description" content="{{ article.meta_description }}">
+  <meta name="theme-color" content="#0D1B2A">
+  <link rel="canonical" href="{{ article.canonical_url }}">
+  <meta property="og:title" content="{{ article.og_title }}">
+  <meta property="og:description" content="{{ article.og_description }}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="{{ article.canonical_url }}">
+  <meta property="og:image" content="{{ site.baseUrl }}{{ article.social_image.src }}">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ article.social_image.alt }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ article.og_title }}">
+  <meta name="twitter:description" content="{{ article.og_description }}">
+  <meta name="twitter:image" content="{{ site.baseUrl }}{{ article.social_image.src }}">
+  <meta name="twitter:image:alt" content="{{ article.social_image.alt }}">
+  <script type="application/ld+json" data-schema="article">{{ article.article_schema_json | safe }}</script>
+  <script type="application/ld+json" data-schema="breadcrumb">{{ article.breadcrumb_schema_json | safe }}</script>
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+{% include "resources/partials/header.html" %}
+<main id="main">
+<article>
+  <header class="article-hero">
+    <div class="container article-hero-grid">
+      <div><p class="eyebrow">{{ article.eyebrow }}</p><h1>{{ article.title }}</h1><p class="article-deck">{{ article.deck }}</p><p class="article-byline">{{ article.byline }}</p>{% if article.publication_label %}<p class="article-dates"><time datetime="{{ article.publication_date }}">Published {{ article.publication_label }}</time>{% if article.updated_label %}<span aria-hidden="true"> · </span><time datetime="{{ article.updated_date }}">Updated {{ article.updated_label }}</time>{% endif %}</p>{% endif %}</div>
+      <img src="..{{ article.hero.src }}" alt="{{ article.hero.alt }}">
+    </div>
+  </header>
+  <div class="container article-layout">
+    <aside class="article-toc"><p class="toc-title">{{ article.toc_title }}</p>{% for item in article.toc %}<a href="#{{ item.id }}">{{ item.label }}</a>{% endfor %}</aside>
+    <div class="article-body">
+{{ body | safe }}
+    </div>
+  </div>
+</article>
+{% include "resources/partials/related-articles.html" %}
+<section class="cta-band"><div class="container cta-row"><div><p class="eyebrow light">{{ article.cta.eyebrow }}</p><h2>{{ article.cta.title }}</h2><p>{{ article.cta.text }}</p></div><div class="contact-card"><a class="button sand" href="{{ site.bookingUrl }}" target="_blank" rel="noopener">{{ article.cta.button }}</a><a href="mailto:{{ site.email }}">{{ site.email }}</a></div></div></section>
+</main>
+{% include "resources/partials/footer.html" %}
+<script src="../js/site.js"></script>
+</body>
+</html>
