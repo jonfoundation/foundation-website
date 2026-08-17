@@ -41,6 +41,7 @@ export function prepareArticles(articles, site) {
     article.article_schema = {
       '@context': 'https://schema.org',
       '@type': 'Article',
+      identifier: source.kb_id,
       headline: source.title,
       description: source.meta_description,
       mainEntityOfPage: { '@type': 'WebPage', '@id': source.canonical_url },
