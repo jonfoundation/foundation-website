@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://foundationsd.co/sitemap.xml
+Sitemap: https://foundationrenovationcoaching.com/sitemap.xml

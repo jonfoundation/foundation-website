@@ -19,7 +19,7 @@ Updated homepage using the new Foundation logo system with navy, sand, sage, and
 7. Build command: leave blank
 8. Build output directory: `/`
 9. Deploy.
-10. Add `foundationsd.co` as the custom domain.
+10. Add `foundationrenovationcoaching.com` as the canonical custom domain. The `www` hostname and legacy `foundationsd.co` hostnames should redirect path-for-path to the canonical apex domain through Cloudflare after redirect approval and testing.
 
 ## Included brand assets
 - `foundation-logo.svg` — primary horizontal website logo

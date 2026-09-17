@@ -1,9 +1,11 @@
 {
-  "baseUrl": "https://foundationsd.co",
+  "baseUrl": "https://foundationrenovationcoaching.com",
   "siteName": "Foundation Renovation Coaching",
   "authorName": "Jon Lourash",
   "bookingUrl": "https://calendar.app.google/AaKjGPcvFGHM815i9",
   "phoneDisplay": "(619) 333-0533",
   "phoneHref": "+16193330533",
-  "email": "hello@foundationsd.co"
+  "email": "hello@foundationrenovationcoaching.com",
+  "nationalServiceDescription": "Virtual renovation coaching for homeowners nationwide",
+  "localServiceDescription": "In-person and onsite renovation coaching available in San Diego County"
 }
