@@ -86,7 +86,17 @@ function escapeXml(value) {
 export function renderSitemap(existingXml, articles, site) {
   const published = articles.filter((article) => article.status === 'published')
     .sort((a, b) => a.hub_order - b.hub_order);
+  const canonicalOrigin = new URL(site.baseUrl).origin;
   const retained = parseSitemap(existingXml)
+    .map((entry) => {
+      if (!entry.loc) return entry;
+      const url = new URL(entry.loc);
+      if (url.hash) throw new Error(`Sitemap URL must not contain a fragment: ${entry.loc}`);
+      if (url.origin !== canonicalOrigin) {
+        throw new Error(`Sitemap URL must use the canonical origin ${canonicalOrigin}: ${entry.loc}`);
+      }
+      return entry;
+    })
     .filter((entry) => !entry.loc?.startsWith(`${site.baseUrl}/resources/`) || entry.loc === `${site.baseUrl}/resources/`)
     .map((entry) => `  ${entry.block.replaceAll('\n', '').trim()}`);
   const resourceEntries = published.map((article) => {
