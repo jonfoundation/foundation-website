@@ -58,8 +58,8 @@ function validateImage(article, field, options) {
     errors.push(`${label}: ${field} requires src and alt`);
     return;
   }
-  if (!image.alt.startsWith('Architectural illustration') && !image.alt.startsWith('Cutaway architectural illustration')) {
-    errors.push(`${label}: ${field}.alt must identify the image as an architectural illustration`);
+  if (!image.alt.startsWith('Architectural illustration') && !image.alt.startsWith('Cutaway architectural illustration') && !image.alt.startsWith('Editorial photograph')) {
+    errors.push(`${label}: ${field}.alt must identify the image as an architectural illustration or editorial photograph`);
   }
   if (!image.src.startsWith('/assets/resources/')) errors.push(`${label}: ${field}.src must be root-relative under /assets/resources/`);
   const relativePath = image.src.replace(/^\//, '');
