@@ -6,6 +6,16 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+/* Clear the sticky navigation (about 106px desktop / 79px mobile). */
+main [id]{scroll-margin-top:130px}
+.table-wrap{max-width:100%;overflow-x:auto;margin:28px 0 40px}
+.article-body{min-width:0}
+.table-wrap:focus-visible{outline:3px solid var(--sand);outline-offset:4px}
+.table-wrap table{width:100%;border-collapse:collapse;table-layout:fixed}
+.table-wrap th,.table-wrap td{padding:14px;text-align:left;vertical-align:top;border:1px solid var(--line);overflow-wrap:anywhere}
+.table-wrap thead{background:var(--navy);color:#fff}
+.table-wrap tbody th{background:var(--sage-light)}
+@media(max-width:580px){.table-wrap table{min-width:540px}}
 body{margin:0;background:var(--warm);color:var(--ink);font-family:"Source Sans 3",Arial,sans-serif;font-size:17px;line-height:1.65}
 img{max-width:100%;display:block}a{color:inherit}
 h1,h2,h3,h4{margin:0;color:var(--navy);font-family:Montserrat,Arial,sans-serif}
