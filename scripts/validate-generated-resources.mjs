@@ -2,11 +2,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { prepareArticles, parseSitemap, renderSitemap } from './lib/generation.mjs';
 import { readArticles, readJson, root } from './lib/resources.mjs';
+import { prepareTopics, searchIndex } from './lib/topics.mjs';
 
 const errors = [];
 const site = readJson('data/site.json');
-const hubData = readJson('data/resources.json');
 const articles = prepareArticles(readArticles(), site);
+const { topics, startHere } = prepareTopics(articles, site);
+const topicUrls = topics.map((topic) => topic.canonical);
 const previewRoot = path.join(root, '.preview');
 const hubPath = path.join(previewRoot, 'resources', 'index.html');
 
@@ -27,20 +29,11 @@ if (!fs.existsSync(hubPath)) {
   errors.push('Draft Resources hub is missing');
 } else {
   const html = fs.readFileSync(hubPath, 'utf8');
-  const cardUrls = [...html.matchAll(/<a class="resource-card-link" href="([^"]+)"/g)].map((match) => match[1]);
-  const expectedUrls = articles.map((article) => article.url);
-  if (cardUrls.join(',') !== expectedUrls.join(',')) errors.push(`Hub card order mismatch: ${cardUrls.join(',')}`);
-  const featured = articles.find((article) => article.kb_id === hubData.featuredKbId);
-  if (cardUrls[0] !== featured?.url) errors.push('Hub featured article does not match configured KB ID');
-  for (const article of articles) {
-    for (const token of [
-      `href="${article.url}"`,
-      `src="..${article.hero.src}"`, `alt="${article.hero.alt}"`,
-      article.title, article.summary, article.category
-    ]) {
-      if (!html.includes(token)) errors.push(`Hub: ${article.kb_id} missing ${token}`);
-    }
-  }
+  const main = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)?.[1] || '';
+  if ((main.match(/<img /g) || []).length > 12) errors.push('Landing page exceeds 12 content thumbnails');
+  if (articles.every((article) => main.includes(`href="${article.url}"`))) errors.push('Landing page embeds the entire article catalog');
+  for (const item of [...topics, ...startHere]) if (!html.includes('href="' + item.url + '"')) errors.push('Landing page missing ' + item.url);
+  if ((html.match(/<li>/g) || []).length !== 6) errors.push('Landing page must contain six recent guides');
 }
 
 for (const article of articles) {
@@ -82,7 +75,7 @@ const retainedUrls = sitemapUrls.filter((url) => !url?.startsWith(`${site.baseUr
 const candidateRetainedUrls = candidateEntries.map((entry) => entry.loc)
   .filter((url) => !url?.startsWith(`${site.baseUrl}/resources/`) || url === `${site.baseUrl}/resources/`);
 if (!sameJson(retainedUrls, candidateRetainedUrls)) errors.push('Generated sitemap does not preserve existing non-article URLs');
-const candidateResourceEntries = candidateEntries.filter((entry) => entry.loc?.startsWith(`${site.baseUrl}/resources/`) && entry.loc !== `${site.baseUrl}/resources/`);
+const candidateResourceEntries = candidateEntries.filter((entry) => entry.loc?.startsWith(`${site.baseUrl}/resources/`) && entry.loc !== `${site.baseUrl}/resources/` && !topicUrls.includes(entry.loc));
 if (!sameJson(candidateResourceEntries.map((entry) => entry.loc), published.map((article) => article.canonical_url))) {
   errors.push('Generated sitemap candidate disagrees with published article order or URLs');
 }
@@ -91,7 +84,7 @@ for (const article of published) {
   if (entry?.lastmod !== (article.updated_date || article.publication_date)) errors.push(`${article.kb_id}: sitemap lastmod mismatch`);
 }
 if (published.length) {
-  const expected = new Set(published.map((article) => article.canonical_url));
+  const expected = new Set([...published.map((article) => article.canonical_url), ...topicUrls]);
   const actual = new Set(sitemapUrls.filter((url) => url?.startsWith(`${site.baseUrl}/resources/`) && url !== `${site.baseUrl}/resources/`));
   if (!sameJson([...actual].sort(), [...expected].sort())) errors.push('Sitemap resource entries disagree with published article files');
   for (const article of published) {
@@ -99,9 +92,29 @@ if (published.length) {
   }
 }
 
+for (const base of [root, previewRoot]) {
+  const index = JSON.parse(fs.readFileSync(path.join(base, 'resources/resource-index.json'), 'utf8'));
+  if (!sameJson(index, searchIndex(topics))) errors.push('Search index disagrees with published article set: ' + base);
+  for (const topic of topics) {
+    const html = fs.readFileSync(path.join(base, 'resources', topic.slug, 'index.html'), 'utf8');
+    if (!html.includes('<link rel="canonical" href="' + topic.canonical + '">')) errors.push('Topic canonical mismatch: ' + topic.slug);
+    if (!html.includes('<title>' + topic.seoTitle.replaceAll('&', '&amp;') + '</title>')) errors.push('Topic title mismatch: ' + topic.slug);
+    const collection = schemaFrom(html, 'collection', topic.slug);
+    const breadcrumb = schemaFrom(html, 'breadcrumb', topic.slug);
+    if (!sameJson(collection, JSON.parse(topic.collectionJson))) errors.push('Topic collection schema mismatch: ' + topic.slug);
+    if (!sameJson(breadcrumb, JSON.parse(topic.breadcrumbJson))) errors.push('Topic breadcrumb schema mismatch: ' + topic.slug);
+    const list = html.match(/<ul class="hub-article-list">([\s\S]*?)<\/ul>/)?.[1] || '';
+    const urls = [...list.matchAll(/href="([^"]+)"/g)].map((m) => m[1]);
+    if (!sameJson(urls, topic.articles.map((article) => article.url))) errors.push('Topic article list mismatch: ' + topic.slug);
+    if ((html.match(/<img /g) || []).length !== 3) errors.push('Topic must have one content image: ' + topic.slug);
+    if (!sitemapUrls.includes(topic.canonical)) errors.push('Missing topic sitemap URL: ' + topic.slug);
+  }
+}
+if (!sameJson(parseSitemap(renderSitemap(sitemapXml, articles, site)), sitemapEntries)) errors.push('Sitemap is not reproducible');
+
 if (errors.length) {
   console.error(errors.join('\n'));
   process.exit(1);
 }
-console.log(`Validated generated draft hub and ${articles.length} article preview(s), related cards, structured data, visible dates, and sitemap state.`);
+console.log(`Validated generated landing page, topic hubs and ${articles.length} article preview(s), related cards, structured data, visible dates, and sitemap state.`);
 if (!published.length) console.log('Sitemap ownership remains inactive while all source articles are drafts; the existing production sitemap is preserved.');
