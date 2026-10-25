@@ -1,0 +1,12 @@
+{% extends "resources/hub-layout.html" %}
+{% set pageTitle = topic.seoTitle %}
+{% set pageDescription = topic.description %}
+{% set canonical = topic.canonical %}
+{% set social = topic.pillar.social_image %}
+{% block extraHead %}<script type="application/ld+json" data-schema="collection">{{ topic.collectionJson | safe }}</script>
+<script type="application/ld+json" data-schema="breadcrumb">{{ topic.breadcrumbJson | safe }}</script>{% endblock %}
+{% block content %}
+<section class="page-hero resources-page-hero"><div class="container narrow"><nav class="hub-breadcrumb" aria-label="Breadcrumb"><a href="/">Home</a><span aria-hidden="true"> / </span><a href="/resources/">Resources</a><span aria-hidden="true"> / </span><span aria-current="page">{{ topic.title | escape }}</span></nav><p class="eyebrow">Foundation Resources</p><h1>{{ topic.title | escape }}</h1><p>{{ topic.description | escape }}</p><p>{{ topic.articles.length }} guides to explore</p><a class="hub-back" href="/resources/">← Browse all topics</a></div></section>
+<section class="section hub-section" aria-labelledby="topic-start"><div class="container"><h2 id="topic-start">Start Here</h2><div class="hub-pillar">{% set article = topic.pillar %}{% include "resources/partials/hub-guide.html" %}</div></div></section>
+<section class="section hub-section hub-browse" aria-labelledby="topic-guides"><div class="container"><h2 id="topic-guides">All {{ topic.title | escape }} Guides</h2><ul class="hub-article-list">{% for article in topic.articles %}<li><a href="{{ article.url }}">{{ article.title | escape }}</a><p>{{ article.summary | escape }}</p></li>{% endfor %}</ul><a class="text-link" href="/resources/">Browse all resource topics →</a></div></section>
+{% endblock %}

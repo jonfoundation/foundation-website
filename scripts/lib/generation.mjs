@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { readJson } from './resources.mjs';
 
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -103,7 +104,9 @@ export function renderSitemap(existingXml, articles, site) {
     const lastmod = article.updated_date || article.publication_date;
     return `  <url><loc>${escapeXml(article.canonical_url)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}<changefreq>monthly</changefreq><priority>0.9</priority></url>`;
   });
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...retained, ...resourceEntries].join('\n')}\n</urlset>\n`;
+  const topicEntries = readJson('data/resource-topics.json').topics.map((topic) =>
+    `  <url><loc>${site.baseUrl}/resources/${topic.slug}/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>`);
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...retained, ...resourceEntries, ...topicEntries].join('\n')}\n</urlset>\n`;
 }
 
 export function outputPath(outputRoot, relativePath) {

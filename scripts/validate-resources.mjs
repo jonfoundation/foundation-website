@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { readArticles, root } from './lib/resources.mjs';
 import { isIsoDate } from './lib/generation.mjs';
+import { prepareTopics } from './lib/topics.mjs';
+import { readJson } from './lib/resources.mjs';
 
 const required = [
   'schema_version', 'kb_id', 'title', 'slug', 'output_path', 'canonical_url',
@@ -17,6 +19,7 @@ const seen = {
 };
 const errors = [];
 const articles = readArticles();
+prepareTopics(articles, readJson('data/site.json'));
 const articlesById = new Map(articles.map((article) => [article.kb_id, article]));
 
 function readImageMetadata(filePath) {

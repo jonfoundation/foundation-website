@@ -1,46 +1,15 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>{{ hub.seoTitle }}</title>
-  <meta name="description" content="{{ hub.metaDescription }}">
-  <meta name="theme-color" content="#0D1B2A">
-  <link rel="canonical" href="{{ site.baseUrl }}/resources/">
-  <meta property="og:title" content="{{ hub.seoTitle }}">
-  <meta property="og:description" content="{{ hub.ogDescription }}">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="{{ site.baseUrl }}/resources/">
-  <meta property="og:image" content="{{ site.baseUrl }}{{ featured.social_image.src }}">
-  <meta property="og:image:alt" content="{{ featured.social_image.alt }}">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="{{ site.baseUrl }}{{ featured.social_image.src }}">
-  <meta name="twitter:image:alt" content="{{ featured.social_image.alt }}">
-  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
-  <link rel="icon" type="image/png" sizes="64x64" href="../assets/favicon-64.png">
-  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css">
-  <script defer src="/js/analytics.js"></script>
-</head>
-<body class="generated-resource-hub">
-<a class="skip" href="#main">Skip to content</a>
-{% include "resources/partials/header.html" %}
-<main id="main">
-  <section class="page-hero resources-page-hero"><div class="container narrow"><p class="eyebrow">{{ hub.eyebrow }}</p><h1>{{ hub.heading }}</h1><p>{{ hub.introduction }}</p></div></section>
-  <section class="section resource-library" aria-labelledby="resource-library-title">
-    <div class="container">
-      <h2 id="resource-library-title" class="sr-only">Renovation resource library</h2>
-      <div class="resource-card-grid">
-        <article class="resource-card featured-card"><a class="resource-card-link" href="{{ featured.url }}"><img src="..{{ featured.hero.src }}" alt="{{ featured.hero.alt }}"><div class="resource-card-body"><p class="resource-category">{{ featured.category }}</p><h2>{{ featured.title }}</h2><p>{{ featured.summary }}</p><span class="text-link" aria-hidden="true">Read the guide →</span></div></a></article>
-        {% for article in articles %}<article class="resource-card"><a class="resource-card-link" href="{{ article.url }}"><img src="..{{ article.hero.src }}" alt="{{ article.hero.alt }}"><div class="resource-card-body"><p class="resource-category">{{ article.category }}</p><h2>{{ article.title }}</h2><p>{{ article.summary }}</p><span class="text-link" aria-hidden="true">Read the guide →</span></div></a></article>{% endfor %}
-      </div>
-    </div>
-  </section>
-  <section class="cta-band"><div class="container cta-row"><div><p class="eyebrow light">Need Help With Your Project?</p><h2>Get independent guidance tailored to your renovation.</h2><p>Schedule a complimentary Discovery Call to discuss where you are and what decisions are ahead.</p></div><div class="contact-card"><a class="button sand" href="{{ site.bookingUrl }}" target="_blank" rel="noopener">Book Your Free Discovery Call</a><a href="tel:{{ site.phoneHref }}">{{ site.phoneDisplay }}</a><a href="mailto:{{ site.email }}">{{ site.email }}</a></div></div></section>
-</main>
-{% include "resources/partials/footer.html" %}
-<script src="../js/site.js"></script>
-</body>
-</html>
+{% extends "resources/hub-layout.html" %}
+{% set pageTitle = hub.seoTitle %}
+{% set pageDescription = hub.metaDescription %}
+{% set canonical = site.baseUrl + '/resources/' %}
+{% set social = featured.social_image %}
+{% block content %}
+<section class="page-hero resources-page-hero"><div class="container narrow"><p class="eyebrow">{{ hub.eyebrow | escape }}</p><h1>{{ hub.heading | escape }}</h1><p>{{ hub.introduction | escape }}</p>
+<form class="resource-search" role="search" aria-label="Search renovation resources"><label for="resource-query">Find a renovation guide</label><div class="resource-search-controls"><input id="resource-query" name="q" type="search" placeholder="Try kitchen layout or renovation budget" aria-describedby="search-help" aria-controls="resource-results" autocomplete="off"><button class="button sand" type="submit">Search</button></div><p id="search-help">Search titles and summaries, or browse the topics below.</p><p id="search-status" role="status" aria-live="polite" aria-atomic="true"></p><ul id="resource-results" class="resource-search-results" hidden></ul></form>
+<noscript><p>Browse by project or decision below to find every guide.</p><style>.resource-search{display:none}</style></noscript>
+</div></section>
+<section class="section hub-section" aria-labelledby="start-here"><div class="container"><p class="eyebrow">Build your foundation</p><h2 id="start-here">Start Here</h2><div class="hub-guide-grid">{% for article in startHere %}{% include "resources/partials/hub-guide.html" %}{% endfor %}</div></div></section>
+<section class="section hub-section hub-browse" aria-labelledby="browse-project"><div class="container"><h2 id="browse-project">Browse by Project</h2><div class="hub-topic-grid">{% for topic in topics %}{% if topic.group == 'project' %}{% include "resources/partials/topic-link.html" %}{% endif %}{% endfor %}</div><h2 id="browse-decision">Browse by Decision</h2><div class="hub-topic-grid hub-decision-grid">{% for topic in topics %}{% if topic.group == 'decision' %}{% include "resources/partials/topic-link.html" %}{% endif %}{% endfor %}</div></div></section>
+<section class="section hub-section" aria-labelledby="recently-published"><div class="container"><h2 id="recently-published">Recently Published</h2><ul class="hub-article-list">{% for article in recent %}<li><a href="{{ article.url }}">{{ article.title | escape }}</a><p>{{ article.summary | escape }}</p></li>{% endfor %}</ul></div></section>
+{% endblock %}
+{% block scripts %}<script defer src="/js/resource-search.js"></script>{% endblock %}
