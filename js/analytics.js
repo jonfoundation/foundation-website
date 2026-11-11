@@ -19,7 +19,24 @@
 
   document.addEventListener('click', (event) => {
     const link = event.target.closest?.('a[href]');
-    if (!link || link.href !== bookingUrl) return;
+    if (!link) return;
+    if (link.getAttribute?.('data-sample-roadmap') === 'alex-morgan') {
+      window.gtag('event', 'sample_roadmap_click', {
+        page_path: window.location.pathname,
+        sample_id: 'alex-morgan'
+      });
+      return;
+    }
+    const sampleType = link.getAttribute?.('data-sample-download');
+    if (sampleType === 'plan-review' || sampleType === 'bid-review') {
+      window.gtag('event', 'sample_download_click', {
+        page_path: window.location.pathname,
+        sample_id: 'alex-morgan',
+        sample_type: sampleType
+      });
+      return;
+    }
+    if (link.href !== bookingUrl) return;
     const location = link.closest('.site-header') ? 'header'
       : link.closest('.cta-band') ? 'contact_cta'
       : link.closest('.site-footer') ? 'footer'

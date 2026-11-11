@@ -27,5 +27,26 @@ for (const origin of ['https://foundationrenovationcoaching.com', 'http://founda
     assert.equal(event[2].page_path, window.location.pathname);
   }
   assert.equal(window.dataLayer.filter((a) => a[0] === 'event').length, 4);
+  window.location.pathname = '/examples/kitchen-renovation-and-addition/';
+  for (const sample of ['roadmap', 'plan-review', 'bid-review']) {
+    const before = window.dataLayer.length;
+    const attributes = sample === 'roadmap'
+      ? { 'data-sample-roadmap': 'alex-morgan', 'data-sample-download': 'plan-review' }
+      : { 'data-sample-download': sample };
+    const link = { href: `/assets/downloads/foundation-sample-${sample}-alex-morgan.pdf`, getAttribute: (name) => attributes[name] ?? null };
+    listeners[0]({ target: { closest: () => link } });
+    assert.equal(window.dataLayer.length, before + 1, `${sample}: one custom event per click`);
+    const event = window.dataLayer.at(-1);
+    assert.equal(event[1], sample === 'roadmap' ? 'sample_roadmap_click' : 'sample_download_click');
+    assert.equal(event[2].sample_id, 'alex-morgan');
+    assert.equal(event[2].page_path, window.location.pathname);
+    assert.deepEqual(Object.keys(event[2]).sort(), sample === 'roadmap'
+      ? ['page_path', 'sample_id'] : ['page_path', 'sample_id', 'sample_type']);
+    if (sample !== 'roadmap') assert.equal(event[2].sample_type, sample);
+  }
+  const before = window.dataLayer.length;
+  listeners[0]({ target: { closest: () => ({ href: '/unrelated.pdf', getAttribute: () => null }) } });
+  listeners[0]({ target: { closest: () => null } });
+  assert.equal(window.dataLayer.length, before, 'unrelated clicks do not emit sample events');
 }
-console.log('GA4 production origin, duplicate initialization and discovery_call_click regression tests passed without network requests.');
+console.log('GA4 production origin, duplicate initialization, discovery_call_click and three exclusive sample-download events passed without network requests.');
