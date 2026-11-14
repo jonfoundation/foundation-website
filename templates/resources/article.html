@@ -38,7 +38,7 @@
 <article>
   <header class="article-hero">
     <div class="container article-hero-grid">
-      <div><p class="eyebrow">{{ article.eyebrow }}</p><h1>{{ article.title }}</h1><p class="article-deck">{{ article.deck }}</p><p class="article-byline">{{ article.byline }}</p>{% if article.publication_label %}<p class="article-dates"><time datetime="{{ article.publication_date }}">Published {{ article.publication_label }}</time>{% if article.updated_label %}<span aria-hidden="true"> · </span><time datetime="{{ article.updated_date }}">Updated {{ article.updated_label }}</time>{% endif %}</p>{% endif %}</div>
+      <div><p class="eyebrow">{{ article.eyebrow }}</p><h1>{{ article.title }}</h1><p class="article-deck">{{ article.deck }}</p><p class="article-byline"><a href="/#about">{{ article.byline }}</a></p>{% if article.publication_label %}<p class="article-dates"><time datetime="{{ article.publication_date }}">Published {{ article.publication_label }}</time>{% if article.updated_label %}<span aria-hidden="true"> · </span><time datetime="{{ article.updated_date }}">Updated {{ article.updated_label }}</time>{% endif %}</p>{% endif %}</div>
       <img src="..{{ article.hero.src }}" alt="{{ article.hero.alt }}">
     </div>
   </header>
