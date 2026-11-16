@@ -13,7 +13,7 @@ for (const origin of ['https://foundationrenovationcoaching.com', 'http://founda
   vm.runInContext(code, context);
   vm.runInContext(code, context);
   const production = origin === 'https://foundationrenovationcoaching.com';
-  assert.equal(tags.length, production ? 1 : 0);
+  assert.equal(tags.length, production ? 2 : 0);
   assert.equal(listeners.length, production ? 1 : 0);
   if (!production) { assert.equal(window.dataLayer, undefined); continue; }
   assert.equal(window.dataLayer.filter((a) => a[0] === 'config').length, 1);

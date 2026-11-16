@@ -4,6 +4,11 @@
   if (window.location.origin !== 'https://foundationrenovationcoaching.com' || window.foundationAnalyticsInitialized) return;
   window.foundationAnalyticsInitialized = true;
 
+  const metaScript = document.createElement('script');
+  metaScript.src = '/js/meta-pixel.js';
+  metaScript.defer = true;
+  document.head.appendChild(metaScript);
+
   const measurementId = 'G-2HFSPXJEJ8';
   const bookingUrl = 'https://calendar.app.google/AaKjGPcvFGHM815i9';
   window.dataLayer = window.dataLayer || [];
