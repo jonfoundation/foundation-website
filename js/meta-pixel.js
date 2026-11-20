@@ -51,7 +51,7 @@
     panel.appendChild(message);
     const settings = document.createElement('button');
     settings.type = 'button'; settings.textContent = 'Ad privacy choices';
-    settings.style.cssText = 'position:fixed;bottom:8px;left:8px;z-index:9999;padding:8px 12px;background:#fff;color:#182b36;border:1px solid #637570;border-radius:4px;cursor:pointer;';
+    settings.style.cssText = 'position:static;padding:0;background:none;color:inherit;border:0;border-radius:0;font:inherit;text-decoration:underline;cursor:pointer;';
     const dismiss = () => { panel.hidden = true; settings.hidden = false; };
     for (const [label, value] of blocked() ? [['Close', 'rejected']] : [['Reject Meta tracking', 'rejected'], ['Accept Meta tracking', 'accepted']]) {
       const button = document.createElement('button');
@@ -63,7 +63,9 @@
     settings.addEventListener('click', () => { panel.hidden = false; settings.hidden = true; panel.querySelector('button').focus(); });
     panel.hidden = blocked() || stored() !== null;
     settings.hidden = !panel.hidden;
-    document.body.appendChild(panel); document.body.appendChild(settings);
+    document.body.appendChild(panel);
+    const footer = document.querySelector?.('.site-footer .legal') || document.body;
+    footer.appendChild(settings);
   }
   if (stored() === 'accepted' && !blocked()) enable();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', controls, { once: true });
